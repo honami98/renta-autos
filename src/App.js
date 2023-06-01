@@ -1,25 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
+import Login_usuario from './componentes/Login_usuario'
+import Registro_usuario from './componentes/Registro_usuario'
+import Rentar_auto from './componentes/Rentar_auto'
+//import Devolucion_auto from './componentes/Devolucion_auto'
+import Recuperar_contraseña from './componentes/Recuperar_contraseña'
 
 function App() {
   return (
-    <div className="App">
+    <div>
+      
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div>
+          <Recuperar_contraseña/>
+          
+        </div>
       </header>
     </div>
+    
   );
+
 }
 
 export default App;
