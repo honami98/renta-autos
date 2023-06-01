@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 //import firebase from 'firebase'; // Importa la biblioteca de Firebase
 
-const Devolucion_auto = () => {
+const DevolucionAuto = () => {
   const [rentList, setRentList] = useState([]);
   const [rentalNumber, setRentalNumber] = useState('');
   const [licensePlate, setLicensePlate] = useState('');
@@ -58,13 +58,13 @@ const Devolucion_auto = () => {
       <form onSubmit={handleSaveReturn}>
         <div>
           <label htmlFor="rentalNumber">Número de renta:</label>
-          <select id="rentalNumber" value={rentalNumber} onChange={handleRentalNumberChange}>
+          {/* <select id="rentalNumber" value={rentalNumber} onChange={handleRentalNumberChange}>
             {rentList.map((rent) => (
               <option key={rent.rentalNumber} value={rent.rentalNumber}>
                 {rent.rentalNumber}
               </option>
             ))}
-          </select>
+          </select> */}
         </div>
         <div>
           <label htmlFor="licensePlate">Número de placa:</label>
@@ -90,4 +90,4 @@ const Devolucion_auto = () => {
   );
 };
 
-export default Devolucion_auto;
+export default DevolucionAuto;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 //import firebase from 'firebase'; // Importa la biblioteca de Firebase
 
-const Recuperar_contraseña = () => {
+const RecuperarContraseña = () => {
   const [username, setUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [reservedWord, setReservedWord] = useState('');
@@ -94,4 +94,4 @@ const Recuperar_contraseña = () => {
   );
 };
 
-export default Recuperar_contraseña;
+export default RecuperarContraseña;

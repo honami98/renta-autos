@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 //import firebase from 'firebase'; // Importa la biblioteca de Firebase
 
-const Rentar_auto= () => {
+const RentarAuto = () => {
   const [carList, setCarList] = useState([]);
-  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
-  const [endDate, setEndDate] = useState('');
-  const [rentalNumber, setRentalNumber] = useState('');
+  const [startDate, setStartDate] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
+  const [endDate, setEndDate] = useState("");
+  const [rentalNumber, setRentalNumber] = useState("");
 
   // Función para obtener los autos registrados en la base de datos de Firebase
   /*const fetchCars = async () => {
@@ -38,14 +40,14 @@ const Rentar_auto= () => {
   const handleSaveRental = (event) => {
     event.preventDefault();
     // Aquí puedes implementar la lógica para guardar la renta en la base de datos de Firebase
-    console.log('Número de renta:', rentalNumber);
-    console.log('Fecha de inicio:', startDate);
-    console.log('Fecha de fin:', endDate);
+    console.log("Número de renta:", rentalNumber);
+    console.log("Fecha de inicio:", startDate);
+    console.log("Fecha de fin:", endDate);
     // Luego puedes realizar acciones adicionales, como mostrar un mensaje de éxito
     // y restablecer los campos del formulario
     setStartDate(new Date().toISOString().slice(0, 10));
-    setEndDate('');
-    setRentalNumber('');
+    setEndDate("");
+    setRentalNumber("");
   };
 
   return (
@@ -103,4 +105,4 @@ const Rentar_auto= () => {
   );
 };
 
-export default Rentar_auto;
+export default RentarAuto;
