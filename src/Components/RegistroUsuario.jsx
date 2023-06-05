@@ -1,61 +1,74 @@
 import React, { useState } from "react";
+import db from "../Firestore";
 
 const RegistroUsuario = () => {
-  const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("usuario");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    name: "",
+    role: "usuario",
+    password: "",
+  });
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
-
-  const handleRoleChange = (event) => {
-    setRole(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Aquí puedes realizar la lógica para registrar al usuario, como enviar una solicitud al servidor para guardar los datos
-    console.log("Nombre de usuario:", username);
-    console.log("Nombre:", name);
-    console.log("Rol:", role);
-    console.log("Contraseña:", password);
-    // Luego puedes realizar acciones adicionales, como mostrar un mensaje de éxito o redirigir al usuario a otra página
-    // También puedes limpiar los campos llamando a las funciones de estado correspondientes
-    setUsername("");
-    setName("");
-    setRole("usuario");
-    setPassword("");
+
+    try {
+      await db.collection("users").add(formData);
+
+      setMessage("Usuario registrado correctamente");
+      setError("");
+      // Luego puedes realizar acciones adicionales, como mostrar un mensaje de éxito o redirigir al usuario a otra página
+      // También puedes limpiar los campos llamando a la función setFormData con los valores iniciales
+      setFormData({
+        username: "",
+        name: "",
+        role: "usuario",
+        password: "",
+      });
+    } catch (error) {
+      console.error("Error al registrar el usuario:", error);
+      setError("Ocurrió un error al registrar el usuario");
+      setMessage("");
+    }
   };
 
   const handleClear = () => {
-    // Limpiar los campos llamando a las funciones de estado correspondientes
-    setUsername("");
-    setName("");
-    setRole("usuario");
-    setPassword("");
+    // Limpiar los campos llamando a la función setFormData con los valores iniciales
+    setFormData({
+      username: "",
+      name: "",
+      role: "usuario",
+      password: "",
+    });
+    setError("");
+    setMessage("");
   };
 
   return (
     <div>
       <h2>Registrar usuario</h2>
+      {message && <p className="success">{message}</p>}
+      {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Nombre de usuario:</label>
           <input
             type="text"
             id="username"
-            value={username}
-            onChange={handleUsernameChange}
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -63,13 +76,19 @@ const RegistroUsuario = () => {
           <input
             type="text"
             id="name"
-            value={name}
-            onChange={handleNameChange}
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
           />
         </div>
         <div>
           <label htmlFor="role">Rol:</label>
-          <select id="role" value={role} onChange={handleRoleChange}>
+          <select
+            id="role"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+          >
             <option value="administrador">Administrador</option>
             <option value="usuario">Usuario</option>
           </select>
@@ -79,8 +98,9 @@ const RegistroUsuario = () => {
           <input
             type="password"
             id="password"
-            value={password}
-            onChange={handlePasswordChange}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
           />
         </div>
         <div>

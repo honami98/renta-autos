@@ -1,36 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import db from "../Firestore";
+import "../Css/Login.css";
+import { Link } from "../../node_modules/react-router-dom/dist/index";
 
 const LoginUsuario = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "username") {
+      setUsername(value);
+    } else if (name === "password") {
+      setPassword(value);
+    }
   };
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
+  const onSave = async (e) => {
+    e.preventDefault();
+
+    const existingUserQuerySnapshot = await db
+      .collection("users")
+      .where("userName", "==", username)
+      .get();
+
+    if (!existingUserQuerySnapshot.empty) {
+      // El usuario existe, inicia sesión o realiza alguna acción adicional
+      setMessage("El usuario existe. Iniciando sesión...");
+      // Agrega aquí la lógica para iniciar sesión o realizar la acción deseada con el usuario existente
+    } else {
+      setIsError("El usuario no existe");
+    }
+    // Restablece el estado
+    setUsername("");
+    setPassword("");
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Aquí puedes realizar la lógica de autenticación, como enviar una solicitud al servidor para verificar las credenciales del usuario
-    console.log('Usuario:', username);
-    console.log('Contraseña:', password);
-    // Luego puedes redirigir al usuario a otra página o realizar otras acciones después del inicio de sesión exitoso
+    onSave(event);
   };
+  
 
   return (
     <div>
       <h2>Iniciar sesión</h2>
+      {message && <p className={isError ? "error" : "sucess"}>{message}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Usuario:</label>
           <input
             type="text"
             id="username"
+            name="username"
             value={username}
-            onChange={handleUsernameChange}
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -38,8 +64,9 @@ const LoginUsuario = () => {
           <input
             type="password"
             id="password"
+            name="password"
             value={password}
-            onChange={handlePasswordChange}
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -47,10 +74,10 @@ const LoginUsuario = () => {
         </div>
       </form>
       <div>
-        <a href="/register">Registrar usuario</a>
+        <Link to="/RegistrarUsuario">Registrar usuario</Link>
       </div>
       <div>
-        <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
+        <Link to="/forgot-passwor">¿Olvidaste tu contraseña?</Link>
       </div>
     </div>
   );
