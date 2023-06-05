@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import db from "../Firestore";
+import Swal from "sweetalert2";
 
 const RegistroUsuario = () => {
   const [formData, setFormData] = useState({
@@ -33,14 +34,20 @@ const RegistroUsuario = () => {
         formData.name === "" ||
         formData.password === ""
       ) {
-        throw new Error("Por favor, complete todos los campos");
+        Swal.fire({
+          icon: "error",
+          title: "Campos vacíos",
+          text: "Por favor, complete todos los campos",
+        });
+        return;
       }
 
       await db.collection("users").add(formData);
 
-      setState({
-        message: "Usuario registrado correctamente",
-        error: "",
+      Swal.fire({
+        icon: "success",
+        title: "¡Registro exitoso!",
+        text: "Usuario registrado correctamente",
       });
 
       setFormData({

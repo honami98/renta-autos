@@ -1,53 +1,60 @@
-import React, { useState, useEffect } from "react";
-//import firebase from 'firebase'; // Importa la biblioteca de Firebase
+import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 const RentarAuto = () => {
   const [carList, setCarList] = useState([]);
-  const [startDate, setStartDate] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
-  const [endDate, setEndDate] = useState("");
-  const [rentalNumber, setRentalNumber] = useState("");
+  const [formData, setFormData] = useState({
+    startDate: new Date().toISOString().slice(0, 10),
+    endDate: "",
+    rentalNumber: "",
+  });
 
-  // Función para obtener los autos registrados en la base de datos de Firebase
-  /*const fetchCars = async () => {
-    try {
-      const snapshot = await firebase.firestore().collection('car').get();
-      const cars = snapshot.docs.map((doc) => doc.data());
-      setCarList(cars);
-    } catch (error) {
-      console.error('Error al obtener los autos:', error);
-    }
-  };
-
-  // Obtén la lista de autos al cargar el componente
-  useEffect(() => {
-    fetchCars();
-  }, []);*/
-
-  const handleStartDateChange = (event) => {
-    setStartDate(event.target.value);
-  };
-
-  const handleEndDateChange = (event) => {
-    setEndDate(event.target.value);
-  };
-
-  const handleRentalNumberChange = (event) => {
-    setRentalNumber(event.target.value);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
   const handleSaveRental = (event) => {
     event.preventDefault();
-    // Aquí puedes implementar la lógica para guardar la renta en la base de datos de Firebase
+
+    if (!carList.length) {
+      Swal.fire({
+        title: "Error",
+        text: "No hay autos disponibles",
+        icon: "error",
+      });
+      return;
+    }
+
+    const { startDate, endDate, rentalNumber } = formData;
+
+    if (!startDate || !endDate || !rentalNumber) {
+      Swal.fire({
+        title: "Error",
+        text: "Por favor, completa todos los campos",
+        icon: "error",
+      });
+      return;
+    }
+
     console.log("Número de renta:", rentalNumber);
     console.log("Fecha de inicio:", startDate);
     console.log("Fecha de fin:", endDate);
-    // Luego puedes realizar acciones adicionales, como mostrar un mensaje de éxito
-    // y restablecer los campos del formulario
-    setStartDate(new Date().toISOString().slice(0, 10));
-    setEndDate("");
-    setRentalNumber("");
+
+    setFormData({
+      startDate: new Date().toISOString().slice(0, 10),
+      endDate: "",
+      rentalNumber: "",
+    });
+
+    Swal.fire({
+      title: "Éxito",
+      text: "La renta se ha guardado correctamente",
+      icon: "success",
+    });
   };
 
   return (
@@ -69,8 +76,9 @@ const RentarAuto = () => {
           <input
             type="date"
             id="startDate"
-            value={startDate}
-            onChange={handleStartDateChange}
+            name="startDate"
+            value={formData.startDate}
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -78,8 +86,9 @@ const RentarAuto = () => {
           <input
             type="date"
             id="endDate"
-            value={endDate}
-            onChange={handleEndDateChange}
+            name="endDate"
+            value={formData.endDate}
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -87,8 +96,9 @@ const RentarAuto = () => {
           <input
             type="text"
             id="rentalNumber"
-            value={rentalNumber}
-            onChange={handleRentalNumberChange}
+            name="rentalNumber"
+            value={formData.rentalNumber}
+            onChange={handleChange}
           />
         </div>
         <div>
