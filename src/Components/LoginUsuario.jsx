@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.css";
+
 import db from "../Firestore";
 import "../Css/Login.css";
-import { Link } from "../../node_modules/react-router-dom/dist/index";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginUsuario = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -18,20 +22,65 @@ const LoginUsuario = () => {
     }
   };
 
+  const handleInicioSesion = (ruta) => {
+    Swal.fire({
+      title: "Iniciando sesión",
+      text: "Por favor, espera un momento...",
+      icon: "info",
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+        setTimeout(() => {
+          navigate(ruta);
+          Swal.close();
+        }, 2000); // Simula un inicio de sesión que tarda 2 segundos
+      },
+    });
+  };
+
+  const handleUsuarioNoExistente = (ruta) => {
+    Swal.fire({
+      title: "Usuario no encontrado",
+      text: "Este usuario no existe",
+      icon: "error",
+      confirmButtonText: "Aceptar",
+    }).then(() => {
+      navigate(ruta);
+    });
+  };
+
+  const handleCamposVacios = () => {
+    Swal.fire({
+      title: "Campos vacíos",
+      text: "Por favor, completa todos los campos",
+      icon: "error",
+      confirmButtonText: "Aceptar",
+    });
+  };
+
   const onSave = async (e) => {
     e.preventDefault();
+
+    if (username === "" || password === "") {
+      handleCamposVacios();
+      return;
+    }
 
     const existingUserQuerySnapshot = await db
       .collection("users")
       .where("userName", "==", username)
+      .where("password", "==", password)
       .get();
 
     if (!existingUserQuerySnapshot.empty) {
       // El usuario existe, inicia sesión o realiza alguna acción adicional
       setMessage("El usuario existe. Iniciando sesión...");
+      handleInicioSesion("/RegistrarUsuario");
       // Agrega aquí la lógica para iniciar sesión o realizar la acción deseada con el usuario existente
     } else {
-      setIsError("El usuario no existe");
+      handleUsuarioNoExistente("/RegistrarUsuario");
     }
     // Restablece el estado
     setUsername("");
@@ -42,12 +91,11 @@ const LoginUsuario = () => {
     event.preventDefault();
     onSave(event);
   };
-  
 
   return (
     <div>
       <h2>Iniciar sesión</h2>
-      {message && <p className={isError ? "error" : "sucess"}>{message}</p>}
+      {message && <p className={isError ? "error" : "success"}>{message}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Usuario:</label>

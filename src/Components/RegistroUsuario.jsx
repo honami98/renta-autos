@@ -9,8 +9,12 @@ const RegistroUsuario = () => {
     password: "",
   });
 
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const [state, setState] = useState({
+    error: "",
+    message: "",
+  });
+
+  const { error, message } = state;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -24,12 +28,21 @@ const RegistroUsuario = () => {
     event.preventDefault();
 
     try {
+      if (
+        formData.username === "" ||
+        formData.name === "" ||
+        formData.password === ""
+      ) {
+        throw new Error("Por favor, complete todos los campos");
+      }
+
       await db.collection("users").add(formData);
 
-      setMessage("Usuario registrado correctamente");
-      setError("");
-      // Luego puedes realizar acciones adicionales, como mostrar un mensaje de éxito o redirigir al usuario a otra página
-      // También puedes limpiar los campos llamando a la función setFormData con los valores iniciales
+      setState({
+        message: "Usuario registrado correctamente",
+        error: "",
+      });
+
       setFormData({
         username: "",
         name: "",
@@ -38,21 +51,25 @@ const RegistroUsuario = () => {
       });
     } catch (error) {
       console.error("Error al registrar el usuario:", error);
-      setError("Ocurrió un error al registrar el usuario");
-      setMessage("");
+      setState({
+        message: "",
+        error: "Ocurrió un error al registrar el usuario",
+      });
     }
   };
 
   const handleClear = () => {
-    // Limpiar los campos llamando a la función setFormData con los valores iniciales
     setFormData({
       username: "",
       name: "",
       role: "usuario",
       password: "",
     });
-    setError("");
-    setMessage("");
+
+    setState({
+      error: "",
+      message: "",
+    });
   };
 
   return (
