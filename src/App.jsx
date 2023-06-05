@@ -7,13 +7,6 @@ function App() {
   return (
     <div className="container">
       <BrowserRouter>
-        {" "}
-        {/* Mueve el componente BrowserRouter aquí */}
-        <header className="header">
-          <h1>RentApp</h1>
-        </header>
-        <Navbar /> {/* Agrega el componente Navbar aquí */}
-        <main className="content">
           <Routes>
             {routes.map((ruta) => (
               <Route
@@ -23,10 +16,6 @@ function App() {
               />
             ))}
           </Routes>
-        </main>
-        <footer className="footer">
-          &copy; {new Date().getFullYear()} My App. All rights reserved.
-        </footer>
       </BrowserRouter>
     </div>
   );

@@ -1,8 +1,5 @@
 .navbar {
   background-color: #333;
-  color: #fff;
-  display: flex;
-  justify-content: space-between;
   padding: 10px;
 }
 
@@ -25,15 +22,12 @@
   color: #fff;
   text-decoration: none;
   padding: 5px 10px;
-  border-radius: 3px;
 }
 
 .navbar a:hover {
-  background-color: #fff;
-  color: #333;
+  background-color: #555;
 }
 
-.navbar a.active {
-  background-color: #fff;
-  color: #333;
+.navbar .active {
+  background-color: #555;
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import db from "../Firestore";
+import db from "../../Firestore";
 import Swal from "sweetalert2";
 
 const RegistroUsuario = () => {

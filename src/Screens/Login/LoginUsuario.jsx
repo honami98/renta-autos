@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
-
-import db from "../Firestore";
-import "../Css/Login.css";
 import { Link, useNavigate } from "react-router-dom";
+import "./Login.css";
+import db from "../../Firestore";
 
 const LoginUsuario = () => {
   const navigate = useNavigate();
@@ -60,24 +59,21 @@ const LoginUsuario = () => {
     });
   };
 
-  const onSave = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (username === "" || password === "") {
       handleCamposVacios();
       return;
     }
-
     const existingUserQuerySnapshot = await db
       .collection("users")
-      .where("userName", "==", username)
+      .where("username", "==", username)
       .where("password", "==", password)
       .get();
-
     if (!existingUserQuerySnapshot.empty) {
       // El usuario existe, inicia sesión o realiza alguna acción adicional
       setMessage("El usuario existe. Iniciando sesión...");
-      handleInicioSesion("/RegistrarUsuario");
+      handleInicioSesion("/Home");
       // Agrega aquí la lógica para iniciar sesión o realizar la acción deseada con el usuario existente
     } else {
       handleUsuarioNoExistente("/RegistrarUsuario");
@@ -85,47 +81,61 @@ const LoginUsuario = () => {
     // Restablece el estado
     setUsername("");
     setPassword("");
-  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onSave(event);
+    // Verificar si la consulta obtuvo resultados
+    if (existingUserQuerySnapshot.empty) {
+      console.log(
+        "No se encontraron usuarios con las credenciales proporcionadas"
+      );
+    } else {
+      console.log(
+        "Se encontraron usuarios con las credenciales proporcionadas"
+      );
+    }
   };
 
   return (
-    <div>
-      <h2>Iniciar sesión</h2>
-      {message && <p className={isError ? "error" : "success"}>{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Usuario:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Contraseña:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <button type="submit">Iniciar sesión</button>
+    <div className="background">
+      <div className="shape"></div>
+      <div className="shape"></div>
+      <form className="login-form" onSubmit={handleSubmit}>
+        <h3>RentApp</h3>
+        {message && <p className={isError ? "error" : "success"}>{message}</p>}
+        <label htmlFor="username">Username</label>
+        <input
+          type="text"
+          placeholder="Email or Phone"
+          id="username"
+          name="username"
+          value={username}
+          onChange={handleChange}
+        />
+
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          placeholder="Password"
+          id="password"
+          name="password"
+          value={password}
+          onChange={handleChange}
+        />
+
+        <button type="submit">Log In</button>
+        <div className="social">
+          <div className="go">
+            <i className="fab fa-google"></i> Google
+          </div>
+          <div className="fb">
+            <i className="fab fa-facebook"></i> Facebook
+          </div>
         </div>
       </form>
       <div>
         <Link to="/RegistrarUsuario">Registrar usuario</Link>
       </div>
       <div>
-        <Link to="/forgot-passwor">¿Olvidaste tu contraseña?</Link>
+        <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
       </div>
     </div>
   );
