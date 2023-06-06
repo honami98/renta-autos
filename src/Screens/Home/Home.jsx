@@ -102,6 +102,46 @@ function Home() {
             </button>
           </div>
         </section>
+        <div className="container mt-5">
+          <div
+            style={{
+              display: "flex",
+              color: "white",
+              gap: "5px",
+            }}
+          >
+            <section>
+              <div>
+                <h2>Nissan GTR R35</h2>
+                <p>
+                  El Nissan GT-R es un automóvil deportivo gran turismo cupé 2+2
+                  con motor delantero montado longitudinalmente y tracción en
+                  las cuatro ruedas, producido por el fabricante japonés Nissan,
+                  lanzado en Japón el 6 de diciembre de 2007, en Estados Unidos
+                  el 7 de julio de 2008 y en el resto del mundo en marzo de
+                  2009.
+                </p>
+              </div>
+            </section>
+            <section>
+              <div>
+                <h2>Lamborghini Aventador</h2>
+                <p>
+                  El pensamiento revolucionario forma parte del ADN de
+                  Automobili Lamborghini: hablar de diseño inspirado en la
+                  aeronáutica o de tecnologías como el motor V12 o el uso de la
+                  fibra de carbono e ir más allá de los límites comúnmente
+                  aceptados forma parte de nuestra filosofía. El Aventador ha
+                  sido diseñado para ir más allá del propio concepto de
+                  rendimiento, convirtiéndose rápidamente en el punto de
+                  referencia para el sector de los superdeportivos y
+                  adelantándose ya hoy a los coches del futuro. Una familia de
+                  superdeportivos que ya es leyenda.
+                </p>
+              </div>
+            </section>
+          </div>
+        </div>
       </div>
       <Footer />
     </>
