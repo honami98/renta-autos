@@ -1,0 +1,58 @@
+.footer {
+  background-color: #080710 !important;
+  color: #fff;
+  padding: 20px;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.footer-links li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-links li a:hover {
+  text-decoration: underline;
+}
+
+/* Animación de desvanecimiento */
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animación de rotación */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Aplicar animaciones a elementos de la clase .footer */
+.footer {
+  animation: fade 1s ease-in-out;
+}
+
+.footer-links li a {
+  animation: rotate 2s linear infinite;
+}

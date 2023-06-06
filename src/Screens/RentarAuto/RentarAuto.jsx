@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import Navbar from "../../Components/Navbar/Navbar";
+import db from "../../Firestore";
+import { Link } from "react-router-dom";
 
 const RentarAuto = () => {
   const [carList, setCarList] = useState([]);
@@ -9,6 +12,25 @@ const RentarAuto = () => {
     rentalNumber: "",
   });
 
+  useEffect(() => {
+    // Consulta a Firestore para obtener la lista de autos disponibles
+    const fetchCars = async () => {
+      try {
+        const carsRef = db.collection("cars");
+        const snapshot = await carsRef.get();
+        const carsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCarList(carsData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCars();
+  }, []);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
@@ -17,7 +39,7 @@ const RentarAuto = () => {
     }));
   };
 
-  const handleSaveRental = (event) => {
+  const handleSaveRental = async (event) => {
     event.preventDefault();
 
     if (!carList.length) {
@@ -40,25 +62,39 @@ const RentarAuto = () => {
       return;
     }
 
-    console.log("Número de renta:", rentalNumber);
-    console.log("Fecha de inicio:", startDate);
-    console.log("Fecha de fin:", endDate);
+    try {
+      // Guardar la renta en Firestore
+      const rentalRef = db.collection("rentals");
+      await rentalRef.add({
+        startDate,
+        endDate,
+        rentalNumber,
+      });
 
-    setFormData({
-      startDate: new Date().toISOString().slice(0, 10),
-      endDate: "",
-      rentalNumber: "",
-    });
+      setFormData({
+        startDate: new Date().toISOString().slice(0, 10),
+        endDate: "",
+        rentalNumber: "",
+      });
 
-    Swal.fire({
-      title: "Éxito",
-      text: "La renta se ha guardado correctamente",
-      icon: "success",
-    });
+      Swal.fire({
+        title: "Éxito",
+        text: "La renta se ha guardado correctamente",
+        icon: "success",
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        title: "Error",
+        text: "Ha ocurrido un error al guardar la renta",
+        icon: "error",
+      });
+    }
   };
 
   return (
     <div>
+      <Navbar />
       <h2>Alquilar un auto</h2>
       <form onSubmit={handleSaveRental}>
         <div>
@@ -104,13 +140,10 @@ const RentarAuto = () => {
         <div>
           <button type="submit">Guardar renta</button>
         </div>
+      <div>
+        <Link to="/">Cerrar sesión</Link>
+      </div>
       </form>
-      <div>
-        <a href="/available-cars">Ver autos disponibles</a>
-      </div>
-      <div>
-        <a href="/logout">Cerrar sesión</a>
-      </div>
     </div>
   );
 };

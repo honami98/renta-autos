@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-//import firebase from 'firebase'; // Importa la biblioteca de Firebase
+import React, { useState } from "react";
+import Swal from "sweetalert2";
+import db from "../../Firestore";
 
 const RecuperarContraseña = () => {
-  const [username, setUsername] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [reservedWord, setReservedWord] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [reservedWord, setReservedWord] = useState("");
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -22,48 +22,57 @@ const RecuperarContraseña = () => {
   const handlePasswordRecovery = async (event) => {
     event.preventDefault();
 
-    /*try {
-      // Verifica si el usuario y la palabra reservada coinciden con los registrados en la base de datos de Firebase
-      const userRef = firebase.firestore().collection('user').doc(username);
+    try {
+      const userRef = db.collection("users").doc(username);
       const userSnapshot = await userRef.get();
 
       if (userSnapshot.exists) {
         const userData = userSnapshot.data();
 
         if (userData.reservedWord === reservedWord) {
-          // Actualiza la contraseña en la base de datos de Firebase
-          await userRef.update({
-            password: newPassword,
+          await db.auth().sendPasswordResetEmail(userData.email);
+
+          // Mostrar un mensaje de éxito utilizando SweetAlert
+          Swal.fire({
+            icon: "success",
+            text: "Se ha enviado un correo electrónico para restablecer la contraseña.",
           });
 
-          // Mostrar un mensaje de éxito o redirigir a una página de éxito
-          console.log('Contraseña actualizada con éxito');
           // Restablecer los campos del formulario
-          setUsername('');
-          setNewPassword('');
-          setReservedWord('');
-          setErrorMessage('');
+          setUsername("");
+          setNewPassword("");
+          setReservedWord("");
           return;
         }
       }
 
       // Mostrar un mensaje de error si las credenciales no coinciden
-      setErrorMessage('Credenciales inválidas');
+      Swal.fire({
+        icon: "error",
+        text: "Credenciales inválidas",
+      });
     } catch (error) {
-      console.error('Error al recuperar la contraseña:', error);
-      // Mostrar un mensaje de error genérico
-      setErrorMessage('Ocurrió un error al recuperar la contraseña');
-    }*/
+      console.error("Error al recuperar la contraseña:", error);
+      // Mostrar un mensaje de error genérico utilizando SweetAlert
+      Swal.fire({
+        icon: "error",
+        text: "Ocurrió un error al recuperar la contraseña",
+      });
+    }
   };
 
   return (
     <div>
       <h2>Recuperar contraseña</h2>
-      {errorMessage && <p>{errorMessage}</p>}
       <form onSubmit={handlePasswordRecovery}>
         <div>
           <label htmlFor="username">Nombre de usuario:</label>
-          <input type="text" id="username" value={username} onChange={handleUsernameChange} />
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={handleUsernameChange}
+          />
         </div>
         <div>
           <label htmlFor="newPassword">Nueva contraseña:</label>

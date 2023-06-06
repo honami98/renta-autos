@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from '../../Components/Navbar/Navbar';
 //import firebase from 'firebase'; // Importa la biblioteca de Firebase
 
 const DevolucionAuto = () => {
@@ -54,6 +55,7 @@ const DevolucionAuto = () => {
 
   return (
     <div>
+      <Navbar/>
       <h2>Devolver un auto</h2>
       <form onSubmit={handleSaveReturn}>
         <div>

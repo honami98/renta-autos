@@ -1,0 +1,85 @@
+/* Home.css */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.carousel-section {
+  padding: 40px 0;
+}
+
+.carousel__slide {
+  position: relative;
+}
+
+.carousel__slide img {
+  width: 100%;
+  height: auto;
+}
+
+.carousel__caption {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: #fff;
+}
+
+.carousel__caption-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.carousel__caption-credit {
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.carousel__indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+  border: none;
+  margin: 5px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.carousel__indicator.selected {
+  background-color: #555;
+}
+
+/* Customize the navbar and footer styles according to your needs */
+
+.link-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #333;
+  text-decoration: none;
+  border: 2px solid #333;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.link-button:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+.link-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #333;
+}
+
+.link-button:active {
+  transform: scale(0.95);
+}
+
