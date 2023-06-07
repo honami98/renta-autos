@@ -5,12 +5,10 @@ import db from "../../Firestore";
 import { Link } from "react-router-dom";
 
 const RentarAuto = () => {
-  const [carList, setCarList] = useState([]);
-  const [formData, setFormData] = useState({
-    startDate: new Date().toISOString().slice(0, 10),
-    endDate: "",
-    rentalNumber: "",
-  });
+  const [carList, setCarList] = useState("");
+  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
+  const [endDate, setEndDate] = useState("");
+  const [rentalNumber, setRentalNumber] = useState("");
 
   useEffect(() => {
     // Consulta a Firestore para obtener la lista de autos disponibles
@@ -113,7 +111,7 @@ const RentarAuto = () => {
             type="date"
             id="startDate"
             name="startDate"
-            value={formData.startDate}
+            value={startDate}
             onChange={handleChange}
           />
         </div>
@@ -123,17 +121,17 @@ const RentarAuto = () => {
             type="date"
             id="endDate"
             name="endDate"
-            value={formData.endDate}
+            value={endDate}
             onChange={handleChange}
           />
         </div>
         <div>
           <label htmlFor="rentalNumber">Número de renta:</label>
           <input
-            type="text"
+            type="number"
             id="rentalNumber"
             name="rentalNumber"
-            value={formData.rentalNumber}
+            value={rentalNumber}
             onChange={handleChange}
           />
         </div>
