@@ -121,7 +121,7 @@ const LoginUsuario = () => {
           onChange={handleChange}
         />
 
-        <button type="submit">Log In</button>
+        <button className="mt-4" type="submit">Log In</button>
         <div className="social">
           <div className="go">
             <i className="fab fa-google"></i> Google

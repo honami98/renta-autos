@@ -5,10 +5,12 @@ import db from "../../Firestore";
 import { Link } from "react-router-dom";
 
 const RentarAuto = () => {
-  const [carList, setCarList] = useState("");
-  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
-  const [endDate, setEndDate] = useState("");
-  const [rentalNumber, setRentalNumber] = useState("");
+  const [carList, setCarList] = useState([]);
+  const [formData, setFormData] = useState({
+    startDate: new Date().toISOString().slice(0, 10),
+    endDate: "",
+    rentalNumber: "",
+  });
 
   useEffect(() => {
     // Consulta a Firestore para obtener la lista de autos disponibles
@@ -21,6 +23,7 @@ const RentarAuto = () => {
           ...doc.data(),
         }));
         setCarList(carsData);
+        console.log("carList:", carsData); // Agregar este console.log
       } catch (error) {
         console.log(error);
       }
@@ -40,7 +43,7 @@ const RentarAuto = () => {
   const handleSaveRental = async (event) => {
     event.preventDefault();
 
-    if (!carList.length) {
+    if (carList.length === 0) {
       Swal.fire({
         title: "Error",
         text: "No hay autos disponibles",
@@ -97,10 +100,15 @@ const RentarAuto = () => {
       <form onSubmit={handleSaveRental}>
         <div>
           <label htmlFor="carList">Autos disponibles:</label>
-          <select id="carList">
+          <select
+            id="carList"
+            value={formData.carId}
+            name="carId"
+            onChange={handleChange}
+          >
             {carList.map((car) => (
               <option key={car.id} value={car.id}>
-                {car.name}
+                {car.modelo}
               </option>
             ))}
           </select>
@@ -111,7 +119,7 @@ const RentarAuto = () => {
             type="date"
             id="startDate"
             name="startDate"
-            value={startDate}
+            value={formData.startDate}
             onChange={handleChange}
           />
         </div>
@@ -121,7 +129,7 @@ const RentarAuto = () => {
             type="date"
             id="endDate"
             name="endDate"
-            value={endDate}
+            value={formData.endDate}
             onChange={handleChange}
           />
         </div>
@@ -131,16 +139,16 @@ const RentarAuto = () => {
             type="number"
             id="rentalNumber"
             name="rentalNumber"
-            value={rentalNumber}
+            value={formData.rentalNumber}
             onChange={handleChange}
           />
         </div>
         <div>
           <button type="submit">Guardar renta</button>
         </div>
-      <div>
-        <Link to="/">Cerrar sesión</Link>
-      </div>
+        <div>
+          <Link to="/">Cerrar sesión</Link>
+        </div>
       </form>
     </div>
   );

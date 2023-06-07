@@ -39,6 +39,11 @@
   opacity: 0.8;
 }
 
+
+.carousel .control-arrow {
+  display: none !important;
+}
+
 .carousel__indicator {
   display: inline-block;
   width: 10px;
@@ -53,6 +58,40 @@
 
 .carousel__indicator.selected {
   background-color: #555;
+}
+
+/* Media queries for responsive design */
+
+/* Styles for screens smaller than 768px */
+@media (max-width: 768px) {
+  .carousel__caption {
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .carousel__caption-title {
+    font-size: 20px;
+  }
+
+  .carousel__caption-credit {
+    font-size: 12px;
+  }
+}
+
+/* Styles for screens between 768px and 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .carousel__caption {
+    bottom: 15px;
+    left: 15px;
+  }
+}
+
+/* Styles for screens larger than 1024px */
+@media (min-width: 1025px) {
+  .carousel__caption {
+    bottom: 20px;
+    left: 20px;
+  }
 }
 
 /* Customize the navbar and footer styles according to your needs */
@@ -82,4 +121,3 @@
 .link-button:active {
   transform: scale(0.95);
 }
-
