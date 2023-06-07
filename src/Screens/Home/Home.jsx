@@ -93,7 +93,7 @@ function Home() {
               showThumbs={true}
               infiniteLoop={true}
               autoPlay={true}
-              interval={2000}
+              interval={4000}
             >
               {renderSlides()}
             </Carousel>
