@@ -40,7 +40,9 @@ function Home() {
             src: carData.imagen,
             alt: carData.placa,
             caption: carData.placa,
+            modelo: carData.modelo,
             credit: `Disponible: ${carData.disponible ? "Sí" : "No"}`,
+            precio: carData.preciodia
           };
         });
 
@@ -74,6 +76,9 @@ function Home() {
         <p className="legend">
           {car.caption}
           <br />
+          <span className="precio">{car.precio} USD</span>
+          <br />
+          <span className="modelo">{car.modelo}</span>
           <br />
           <span className="credit">{car.credit}</span>
         </p>

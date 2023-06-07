@@ -2,6 +2,7 @@ import LoginUsuario from "../Screens/Login/LoginUsuario";
 import RegistroUsuario from "../Screens/RegistroUsuario/RegistroUsuario";
 import RentarAuto from "../Screens/RentarAuto/RentarAuto";
 import DevolucionAuto from "../Screens/DevolucionAuto/DevolucionAuto";
+import RegistroAuto from "../Screens/RegistroAuto/RegistroAuto"
 import Home from "../Screens/Home/Home";
 
 const routes = [
@@ -11,6 +12,7 @@ const routes = [
   { path: "/RegistrarUsuario", component: RegistroUsuario, exact: true },
   { path: "/RentarAuto", component: RentarAuto, exact: true },
   { path: "/DevolucionAuto", component: DevolucionAuto, exact: true },
+  { path: "/RegistroAuto", component: RegistroAuto, exact: true },
 ];
 
 export { routes };

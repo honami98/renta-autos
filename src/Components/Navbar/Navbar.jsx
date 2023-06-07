@@ -41,6 +41,16 @@ const Navbar = () => {
               Devolver Vehiculo
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink
+              className="nav-link"
+              to="/RegistroAuto"
+              activeClassName="active"
+            >
+              Registrar Auto
+            </NavLink>
+          </li>
+
         </ul>
       </div>
     </nav>
