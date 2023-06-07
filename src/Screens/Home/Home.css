@@ -121,3 +121,7 @@
 .link-button:active {
   transform: scale(0.95);
 }
+
+.div-right{
+  text-align: right;
+}
