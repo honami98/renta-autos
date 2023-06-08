@@ -95,8 +95,8 @@ const RentarAuto = () => {
   return (
     <div>
       <Navbar />
-      <h2 className="text-center">Alquilar un auto</h2>
       <div className="container">
+      <h2 className="text-center">Alquilar un auto</h2>
         <form onSubmit={handleSaveRental}>
           <div className="form-group">
             <label htmlFor="carList">Autos disponibles:</label>

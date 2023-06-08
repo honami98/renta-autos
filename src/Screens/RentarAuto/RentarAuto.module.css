@@ -6,10 +6,10 @@
   padding: 20px;
 }
 
-.container h2 {
+ h2 {
   font-size: 24px;
   font-weight: bold;
-  color: #ccc;
+  color: #ccc !important;
   margin-bottom: 20px;
 }
 
@@ -18,9 +18,9 @@
   flex-direction: column;
 }
 
-.container label {
+label {
   font-weight: bold;
-    color: #ccc;
+  color: #ccc;
   margin-bottom: 5px;
 }
 

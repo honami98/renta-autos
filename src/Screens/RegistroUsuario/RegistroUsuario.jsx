@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import db from "../../Firestore";
 import Swal from "sweetalert2";
+import Navbar from "../../Components/Navbar/Navbar";
 
 const RegistroUsuario = () => {
   const [formData, setFormData] = useState({
@@ -80,61 +81,74 @@ const RegistroUsuario = () => {
   };
 
   return (
-    <div>
-      <h2>Registrar usuario</h2>
-      {message && <p className="success">{message}</p>}
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Nombre de usuario:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="name">Nombre:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="role">Rol:</label>
-          <select
-            id="role"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-          >
-            <option value="administrador">Administrador</option>
-            <option value="usuario">Usuario</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="password">Contraseña:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <button type="submit">Registrar</button>
-          <button type="button" onClick={handleClear}>
-            Limpiar
-          </button>
-        </div>
-      </form>
-    </div>
+    <>
+      <Navbar/>
+      <div class="container">
+        <h2>Registrar usuario</h2>
+        {message && <p class="success">{message}</p>}
+        {error && <p class="error">{error}</p>}
+        <form class="form" onSubmit={handleSubmit}>
+          <div class="form-group">
+            <label for="username">Nombre de usuario:</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              class="form-control"
+              value={formData.username}
+              onChange={handleChange}
+            />
+          </div>
+          <div class="form-group">
+            <label for="name">Nombre:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-control"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </div>
+          <div class="form-group">
+            <label for="role">Rol:</label>
+            <select
+              id="role"
+              name="role"
+              class="form-control"
+              value={formData.role}
+              onChange={handleChange}
+            >
+              <option value="administrador">Administrador</option>
+              <option value="usuario">Usuario</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">
+              Registrar
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onClick={handleClear}
+            >
+              Limpiar
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 

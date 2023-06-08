@@ -29,64 +29,73 @@ const CarForm = () => {
   };
 
   return (
-    <>
-      <div className="container">
-        <Navbar/>
-        <form onSubmit={handleSubmit}>
-          <label>
-            Número de placa:
-            <input
-              type="text"
-              name="placa"
-              value={carData.plateNumber}
-              onChange={handleChange}
-            />
-          </label>
-          <br />
-          <label>
-            Modelo:
-            <input
-              type="text"
-              name="modelo"
-              value={carData.model}
-              onChange={handleChange}
-            />
-          </label>
-          <br />
-          <label>
-            Precio por día:
-            <input
-              type="number"
-              name="preciodia"
-              value={carData.dailyPrice}
-              onChange={handleChange}
-            />
-          </label>
-          <br />
-          <label>
-            URL de la imagen:
-            <input
-              type="text"
-              name="imagen"
-              value={carData.image}
-              onChange={handleChange}
-            />
-          </label>
-          <br />
-          <label>
-            Disponible:
+    <div class="container">
+      <Navbar />
+      <form class="form" onSubmit={handleSubmit}>
+        <div class="form-group">
+          <label for="placa">Número de placa:</label>
+          <input
+            type="text"
+            id="placa"
+            name="placa"
+            class="form-control"
+            value={carData.plateNumber}
+            onChange={handleChange}
+          />
+        </div>
+        <div class="form-group">
+          <label for="modelo">Modelo:</label>
+          <input
+            type="text"
+            id="modelo"
+            name="modelo"
+            class="form-control"
+            value={carData.model}
+            onChange={handleChange}
+          />
+        </div>
+        <div class="form-group">
+          <label for="preciodia">Precio por día:</label>
+          <input
+            type="number"
+            id="preciodia"
+            name="preciodia"
+            class="form-control"
+            value={carData.dailyPrice}
+            onChange={handleChange}
+          />
+        </div>
+        <div class="form-group">
+          <label for="imagen">URL de la imagen:</label>
+          <input
+            type="text"
+            id="imagen"
+            name="imagen"
+            class="form-control"
+            value={carData.image}
+            onChange={handleChange}
+          />
+        </div>
+        <div class="form-group">
+          <div class="form-check">
             <input
               type="checkbox"
+              id="disponible"
               name="disponible"
+              class="form-check-input"
               checked={carData.available}
               onChange={handleChange}
             />
-          </label>
-          <br />
-          <button type="submit">Registrar automóvil</button>
-        </form>
-      </div>
-    </>
+            <label class="form-check-label" for="disponible">
+              Disponible
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Registrar automóvil
+        </button>
+      </form>
+    </div>
   );
 };
 

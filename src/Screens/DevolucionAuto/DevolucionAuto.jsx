@@ -54,35 +54,44 @@ const DevolucionAuto = () => {
   };
 
   return (
-    <div>
-      <Navbar/>
+    <div class="container">
+      <Navbar />
       <h2>Devolver un auto</h2>
-      <form onSubmit={handleSaveReturn}>
-        <div>
-          <label htmlFor="rentalNumber">Número de renta:</label>
+      <form class="form" onSubmit={handleSaveReturn}>
+        <div class="form-group">
+          <label for="rentalNumber">Número de renta:</label>
           {/* <select id="rentalNumber" value={rentalNumber} onChange={handleRentalNumberChange}>
-            {rentList.map((rent) => (
-              <option key={rent.rentalNumber} value={rent.rentalNumber}>
-                {rent.rentalNumber}
-              </option>
-            ))}
-          </select> */}
+        {rentList.map((rent) => (
+          <option key={rent.rentalNumber} value={rent.rentalNumber}>
+            {rent.rentalNumber}
+          </option>
+        ))}
+      </select> */}
         </div>
-        <div>
-          <label htmlFor="licensePlate">Número de placa:</label>
-          <input type="text" id="licensePlate" value={licensePlate} disabled />
+        <div class="form-group">
+          <label for="licensePlate">Número de placa:</label>
+          <input
+            type="text"
+            id="licensePlate"
+            value={licensePlate}
+            disabled
+            class="form-control"
+          />
         </div>
-        <div>
-          <label htmlFor="returnDate">Fecha de devolución:</label>
+        <div class="form-group">
+          <label for="returnDate">Fecha de devolución:</label>
           <input
             type="date"
             id="returnDate"
             value={returnDate}
             onChange={handleReturnDateChange}
+            class="form-control"
           />
         </div>
-        <div>
-          <button type="submit">Guardar devolución</button>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">
+            Guardar devolución
+          </button>
         </div>
       </form>
       <div>
