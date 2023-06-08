@@ -7,6 +7,7 @@ const RecuperarContraseña = () => {
   const [username, setUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [reservedWord, setReservedWord] = useState("");
+  const [canChangePassword, setCanChangePassword] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -24,40 +25,92 @@ const RecuperarContraseña = () => {
     event.preventDefault();
 
     try {
-      const userRef = db.collection("users").doc(username);
-      const userSnapshot = await userRef.get();
-
-      if (userSnapshot.exists) {
-        const userData = userSnapshot.data();
-
-        if (userData.reservedWord === reservedWord) {
-          await db.auth().sendPasswordResetEmail(userData.email);
-
-          // Mostrar un mensaje de éxito utilizando SweetAlert
-          Swal.fire({
-            icon: "success",
-            text: "Se ha enviado un correo electrónico para restablecer la contraseña.",
-          });
-
-          // Restablecer los campos del formulario
-          setUsername("");
-          setNewPassword("");
-          setReservedWord("");
-          return;
-        }
+      if (username === "" || reservedWord === "") {
+        // Mostrar una alerta de error si los campos están vacíos
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Por favor, complete todos los campos",
+        });
+        return;
       }
 
-      // Mostrar un mensaje de error si las credenciales no coinciden
-      Swal.fire({
-        icon: "error",
-        text: "Credenciales inválidas",
-      });
+      const existingUserQuerySnapshot = await db
+        .collection("users")
+        .where("username", "==", username)
+        .where("reservword", "==", reservedWord)
+        .get();
+
+      if (!existingUserQuerySnapshot.empty) {
+        // Mostrar una alerta de éxito si el usuario existe
+        Swal.fire({
+          icon: "success",
+          title: "Éxito",
+          text: "El usuario existe. Puede cambiar la contraseña.",
+        });
+        setCanChangePassword(true);
+      } else {
+        // Mostrar una alerta de error si el usuario no existe
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se encontró el usuario",
+        });
+      }
     } catch (error) {
       console.error("Error al recuperar la contraseña:", error);
-      // Mostrar un mensaje de error genérico utilizando SweetAlert
+      // Mostrar una alerta de error genérico utilizando SweetAlert
       Swal.fire({
         icon: "error",
+        title: "Error",
         text: "Ocurrió un error al recuperar la contraseña",
+      });
+    }
+  };
+
+  const handleChangePassword = async (event) => {
+    event.preventDefault();
+
+    try {
+      const existingUserQuerySnapshot = await db
+        .collection("users")
+        .where("username", "==", username)
+        .where("reservword", "==", reservedWord)
+        .get();
+
+      if (!existingUserQuerySnapshot.empty) {
+        const userRef = existingUserQuerySnapshot.docs[0].ref;
+        await userRef.update({
+          password: newPassword,
+        });
+
+        // Mostrar una alerta de éxito si la contraseña se cambió correctamente
+        Swal.fire({
+          icon: "success",
+          title: "Éxito",
+          text: "Contraseña actualizada correctamente",
+        });
+
+        // Restablecer los campos del formulario
+        setUsername("");
+        setNewPassword("");
+        setReservedWord("");
+        setCanChangePassword(false);
+      } else {
+        // Mostrar una alerta de error si el usuario no existe
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se encontró el usuario",
+        });
+      }
+    } catch (error) {
+      console.error("Error al cambiar la contraseña:", error);
+      // Mostrar una alerta de error genérico utilizando SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al cambiar la contraseña",
       });
     }
   };
@@ -66,10 +119,16 @@ const RecuperarContraseña = () => {
     <>
       <Navbar />
       <div className="container">
-        <h2>Recuperar contraseña</h2>
-        <form onSubmit={handlePasswordRecovery}>
-          <div className="form-group">
-            <label htmlFor="username">Nombre de usuario:</label>
+        <h2 className="mt-4 mb-4">Recuperar contraseña</h2>
+        <form
+          onSubmit={
+            canChangePassword ? handleChangePassword : handlePasswordRecovery
+          }
+        >
+          <div className="mb-3">
+            <label htmlFor="username" className="form-label">
+              Nombre de usuario:
+            </label>
             <input
               type="text"
               id="username"
@@ -79,19 +138,25 @@ const RecuperarContraseña = () => {
               className="form-control"
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="newPassword">Nueva contraseña:</label>
-            <input
-              type="password"
-              id="newPassword"
-              name="newPassword"
-              value={newPassword}
-              onChange={handleChange}
-              className="form-control"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="reservedWord">Palabra reservada:</label>
+          {canChangePassword && (
+            <div className="mb-3">
+              <label htmlFor="newPassword" className="form-label">
+                Nueva contraseña:
+              </label>
+              <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                value={newPassword}
+                onChange={handleChange}
+                className="form-control"
+              />
+            </div>
+          )}
+          <div className="mb-3">
+            <label htmlFor="reservedWord" className="form-label">
+              Palabra reservada:
+            </label>
             <input
               type="password"
               id="reservedWord"
@@ -101,9 +166,9 @@ const RecuperarContraseña = () => {
               className="form-control"
             />
           </div>
-          <div className="form-group">
+          <div className="mb-3">
             <button type="submit" className="btn btn-primary">
-              Recuperar
+              {canChangePassword ? "Cambiar contraseña" : "Recuperar"}
             </button>
           </div>
         </form>
