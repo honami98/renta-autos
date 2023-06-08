@@ -7,7 +7,7 @@ import "./RentarAuto.module.css";
 
 const RentarAuto = () => {
   const [carList, setCarList] = useState([]);
-  const [formData, setFormData] = useState({
+  const [rentForm, setFormData] = useState({
     startDate: new Date().toISOString().slice(0, 10),
     endDate: "",
     rentalNumber: "",
@@ -40,9 +40,8 @@ const RentarAuto = () => {
     }));
   };
 
-  const handleSaveRental = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
     if (carList.length === 0) {
       Swal.fire({
         title: "Error",
@@ -51,59 +50,54 @@ const RentarAuto = () => {
       });
       return;
     }
-
-    const { startDate, endDate, rentalNumber } = formData;
-
-    if (!startDate || !endDate || !rentalNumber) {
-      Swal.fire({
-        title: "Error",
-        text: "Por favor, completa todos los campos",
-        icon: "error",
-      });
-      return;
-    }
-
     try {
-      const rentalRef = db.collection("rentals");
-      await rentalRef.add({
-        startDate,
-        endDate,
-        rentalNumber,
-      });
+      const { startDate, endDate, rentalNumber } = rentForm;
 
-      setFormData({
-        startDate: new Date().toISOString().slice(0, 10),
-        endDate: "",
-        rentalNumber: "",
-      });
 
+      if (!startDate || !endDate || !rentalNumber) {
+        Swal.fire({
+          title: "Error",
+          text: "Por favor, completa todos los campos",
+          icon: "error",
+        });
+        return;
+      }
+      await db.collection("rent").add(rentForm);
       Swal.fire({
         title: "Éxito",
         text: "La renta se ha guardado correctamente",
         icon: "success",
       });
-    } catch (error) {
-      console.log(error);
-      Swal.fire({
-        title: "Error",
-        text: "Ha ocurrido un error al guardar la renta",
-        icon: "error",
-      });
-    }
-  };
+      // Mostrar alerta de éxito
+
+      // Limpiar los campos del formulario
+      setFormData({
+        startDate: new Date().toISOString().slice(0, 10),
+        endDate: "",
+        rentalNumber: "",
+      });    
+  } catch (error) {
+    console.log(error);
+    Swal.fire({
+      title: "Error",
+      text: "Ha ocurrido un error al guardar la renta",
+      icon: "error",
+    });
+  }
+};
 
   return (
     <div>
       <Navbar />
       <div className="container">
       <h2 className="text-center">Alquilar un auto</h2>
-        <form onSubmit={handleSaveRental}>
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="carList">Autos disponibles:</label>
             <select
               id="carList"
               className="form-control"
-              value={formData.carId}
+    
               name="carId"
               onChange={handleChange}
             >
@@ -121,7 +115,7 @@ const RentarAuto = () => {
               id="startDate"
               className="form-control"
               name="startDate"
-              value={formData.startDate}
+              value={rentForm.startDate}
               onChange={handleChange}
             />
           </div>
@@ -132,7 +126,7 @@ const RentarAuto = () => {
               id="endDate"
               className="form-control"
               name="endDate"
-              value={formData.endDate}
+              value={rentForm.endDate}
               onChange={handleChange}
             />
           </div>
@@ -143,7 +137,8 @@ const RentarAuto = () => {
               id="rentalNumber"
               className="form-control"
               name="rentalNumber"
-              value={formData.rentalNumber}
+              value={rentForm.rentalNumber}
+              
               onChange={handleChange}
             />
           </div>
