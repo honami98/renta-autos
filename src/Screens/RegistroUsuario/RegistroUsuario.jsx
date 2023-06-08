@@ -9,6 +9,7 @@ const RegistroUsuario = () => {
     name: "",
     role: "usuario",
     password: "",
+    reservword: "", // Nuevo campo para reservword
   });
 
   const [state, setState] = useState({
@@ -33,7 +34,8 @@ const RegistroUsuario = () => {
       if (
         formData.username === "" ||
         formData.name === "" ||
-        formData.password === ""
+        formData.password === "" ||
+        formData.reservword === "" // Verifica que el campo de reservword no esté vacío
       ) {
         Swal.fire({
           icon: "error",
@@ -56,6 +58,7 @@ const RegistroUsuario = () => {
         name: "",
         role: "usuario",
         password: "",
+        reservword: "", // Restablece el campo de reservword a un valor vacío
       });
     } catch (error) {
       console.error("Error al registrar el usuario:", error);
@@ -72,6 +75,7 @@ const RegistroUsuario = () => {
       name: "",
       role: "usuario",
       password: "",
+      reservword: "", // Restablece el campo de reservword a un valor vacío
     });
 
     setState({
@@ -82,40 +86,40 @@ const RegistroUsuario = () => {
 
   return (
     <>
-      <Navbar/>
-      <div class="container">
+      <Navbar />
+      <div className="container">
         <h2>Registrar usuario</h2>
-        {message && <p class="success">{message}</p>}
-        {error && <p class="error">{error}</p>}
-        <form class="form" onSubmit={handleSubmit}>
-          <div class="form-group">
-            <label for="username">Nombre de usuario:</label>
+        {message && <p className="success">{message}</p>}
+        {error && <p className="error">{error}</p>}
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="username">Nombre de usuario:</label>
             <input
               type="text"
               id="username"
               name="username"
-              class="form-control"
+              className="form-control"
               value={formData.username}
               onChange={handleChange}
             />
           </div>
-          <div class="form-group">
-            <label for="name">Nombre:</label>
+          <div className="form-group">
+            <label htmlFor="name">Nombre:</label>
             <input
               type="text"
               id="name"
               name="name"
-              class="form-control"
+              className="form-control"
               value={formData.name}
               onChange={handleChange}
             />
           </div>
-          <div class="form-group">
-            <label for="role">Rol:</label>
+          <div className="form-group">
+            <label htmlFor="role">Rol:</label>
             <select
               id="role"
               name="role"
-              class="form-control"
+              className="form-control"
               value={formData.role}
               onChange={handleChange}
             >
@@ -123,24 +127,35 @@ const RegistroUsuario = () => {
               <option value="usuario">Usuario</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="password">Contraseña:</label>
+          <div className="form-group">
+            <label htmlFor="password">Contraseña:</label>
             <input
               type="password"
               id="password"
               name="password"
-              class="form-control"
+              className="form-control"
               value={formData.password}
               onChange={handleChange}
             />
           </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary">
+          <div className="form-group">
+            <label htmlFor="reservword">Palabra Reservada</label>
+            <input
+              type="text"
+              id="reservword"
+              name="reservword"
+              className="form-control"
+              value={formData.reservword}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <button type="submit" className="btn btn-primary">
               Registrar
             </button>
             <button
               type="button"
-              class="btn btn-secondary"
+              className="btn btn-secondary"
               onClick={handleClear}
             >
               Limpiar
