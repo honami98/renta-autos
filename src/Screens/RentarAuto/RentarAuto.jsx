@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import Navbar from "../../Components/Navbar/Navbar";
 import db from "../../Firestore";
 import { Link } from "react-router-dom";
+import "./RentarAuto.module.css";
 
 const RentarAuto = () => {
   const [carList, setCarList] = useState([]);
@@ -13,7 +14,6 @@ const RentarAuto = () => {
   });
 
   useEffect(() => {
-    // Consulta a Firestore para obtener la lista de autos disponibles
     const fetchCars = async () => {
       try {
         const carsRef = db.collection("cars");
@@ -23,7 +23,7 @@ const RentarAuto = () => {
           ...doc.data(),
         }));
         setCarList(carsData);
-        console.log("carList:", carsData); // Agregar este console.log
+        console.log("carList:", carsData);
       } catch (error) {
         console.log(error);
       }
@@ -64,7 +64,6 @@ const RentarAuto = () => {
     }
 
     try {
-      // Guardar la renta en Firestore
       const rentalRef = db.collection("rentals");
       await rentalRef.add({
         startDate,
@@ -96,60 +95,68 @@ const RentarAuto = () => {
   return (
     <div>
       <Navbar />
-      <h2>Alquilar un auto</h2>
-      <form onSubmit={handleSaveRental}>
-        <div>
-          <label htmlFor="carList">Autos disponibles:</label>
-          <select
-            id="carList"
-            value={formData.carId}
-            name="carId"
-            onChange={handleChange}
-          >
-            {carList.map((car) => (
-              <option key={car.id} value={car.id}>
-                {car.modelo}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="startDate">Fecha de inicio:</label>
-          <input
-            type="date"
-            id="startDate"
-            name="startDate"
-            value={formData.startDate}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="endDate">Fecha de fin:</label>
-          <input
-            type="date"
-            id="endDate"
-            name="endDate"
-            value={formData.endDate}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="rentalNumber">Número de renta:</label>
-          <input
-            type="number"
-            id="rentalNumber"
-            name="rentalNumber"
-            value={formData.rentalNumber}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <button type="submit">Guardar renta</button>
-        </div>
-        <div>
-          <Link to="/">Cerrar sesión</Link>
-        </div>
-      </form>
+      <h2 className="text-center">Alquilar un auto</h2>
+      <div className="container">
+        <form onSubmit={handleSaveRental}>
+          <div className="form-group">
+            <label htmlFor="carList">Autos disponibles:</label>
+            <select
+              id="carList"
+              className="form-control"
+              value={formData.carId}
+              name="carId"
+              onChange={handleChange}
+            >
+              {carList.map((car) => (
+                <option key={car.id} value={car.id}>
+                  {car.modelo}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="startDate">Fecha de inicio:</label>
+            <input
+              type="date"
+              id="startDate"
+              className="form-control"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="endDate">Fecha de fin:</label>
+            <input
+              type="date"
+              id="endDate"
+              className="form-control"
+              name="endDate"
+              value={formData.endDate}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="rentalNumber">Número de renta:</label>
+            <input
+              type="number"
+              id="rentalNumber"
+              className="form-control"
+              name="rentalNumber"
+              value={formData.rentalNumber}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <button type="submit" className="btn btn-primary">
+              Guardar renta
+            </button>
+          </div>
+          <div>
+            <Link to="/">Cerrar sesión</Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

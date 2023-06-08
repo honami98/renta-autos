@@ -121,22 +121,18 @@ const LoginUsuario = () => {
           onChange={handleChange}
         />
 
-        <button className="mt-4" type="submit">Log In</button>
+        <button className="mt-4" type="submit">
+          Log In
+        </button>
         <div className="social">
-          <div className="go">
-            <i className="fab fa-google"></i> Google
+          <div>
+            <Link to="/RegistrarUsuario">Registrar usuario</Link>
           </div>
-          <div className="fb">
-            <i className="fab fa-facebook"></i> Facebook
+          <div>
+            <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
           </div>
         </div>
       </form>
-      <div>
-        <Link to="/RegistrarUsuario">Registrar usuario</Link>
-      </div>
-      <div>
-        <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
-      </div>
     </div>
   );
 };
