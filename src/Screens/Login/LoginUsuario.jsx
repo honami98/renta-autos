@@ -101,20 +101,20 @@ const LoginUsuario = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         <h3>RentApp</h3>
         {message && <p className={isError ? "error" : "success"}>{message}</p>}
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">Nombre de Usuario</label>
         <input
           type="text"
-          placeholder="Email or Phone"
+          placeholder="Nombre de usuario"
           id="username"
           name="username"
           value={username}
           onChange={handleChange}
         />
 
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">Contraseña</label>
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Contraseña"
           id="password"
           name="password"
           value={password}
@@ -122,14 +122,14 @@ const LoginUsuario = () => {
         />
 
         <button className="mt-4" type="submit">
-          Log In
+          Iniciar Sesion
         </button>
         <div className="social">
           <div>
             <Link to="/RegistrarUsuario">Registrar usuario</Link>
           </div>
           <div>
-            <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+            <Link to="/RecuperarContraseña">¿Olvidaste tu contraseña?</Link>
           </div>
         </div>
       </form>

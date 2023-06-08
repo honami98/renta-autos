@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import db from "../../Firestore";
+import Navbar from "../../Components/Navbar/Navbar";
 
 const RecuperarContraseña = () => {
   const [username, setUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [reservedWord, setReservedWord] = useState("");
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-  const handleNewPasswordChange = (event) => {
-    setNewPassword(event.target.value);
-  };
-
-  const handleReservedWordChange = (event) => {
-    setReservedWord(event.target.value);
+    if (name === "username") {
+      setUsername(value);
+    } else if (name === "newPassword") {
+      setNewPassword(value);
+    } else if (name === "reservedWord") {
+      setReservedWord(value);
+    }
   };
 
   const handlePasswordRecovery = async (event) => {
@@ -62,44 +63,55 @@ const RecuperarContraseña = () => {
   };
 
   return (
-    <div>
-      <h2>Recuperar contraseña</h2>
-      <form onSubmit={handlePasswordRecovery}>
+    <>
+      <Navbar />
+      <div className="container">
+        <h2>Recuperar contraseña</h2>
+        <form onSubmit={handlePasswordRecovery}>
+          <div className="form-group">
+            <label htmlFor="username">Nombre de usuario:</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={username}
+              onChange={handleChange}
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="newPassword">Nueva contraseña:</label>
+            <input
+              type="password"
+              id="newPassword"
+              name="newPassword"
+              value={newPassword}
+              onChange={handleChange}
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="reservedWord">Palabra reservada:</label>
+            <input
+              type="password"
+              id="reservedWord"
+              name="reservedWord"
+              value={reservedWord}
+              onChange={handleChange}
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <button type="submit" className="btn btn-primary">
+              Recuperar
+            </button>
+          </div>
+        </form>
         <div>
-          <label htmlFor="username">Nombre de usuario:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={handleUsernameChange}
-          />
+          <a href="/login">Iniciar sesión</a>
         </div>
-        <div>
-          <label htmlFor="newPassword">Nueva contraseña:</label>
-          <input
-            type="password"
-            id="newPassword"
-            value={newPassword}
-            onChange={handleNewPasswordChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="reservedWord">Palabra reservada:</label>
-          <input
-            type="password"
-            id="reservedWord"
-            value={reservedWord}
-            onChange={handleReservedWordChange}
-          />
-        </div>
-        <div>
-          <button type="submit">Recuperar</button>
-        </div>
-      </form>
-      <div>
-        <a href="/login">Iniciar sesión</a>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -118,8 +118,9 @@ const DevolucionAuto = () => {
   };
 
   return (
-    <div className="container">
+    <>
       <Navbar />
+    <div className="container">
       <h2>Devolver un auto</h2>
       {loading ? (
         <p>Cargando...</p>
@@ -127,7 +128,8 @@ const DevolucionAuto = () => {
         <form className="form" onSubmit={handleSaveReturn}>
           <div className="form-group">
             <label htmlFor="licensePlate">Número de placa:</label>
-            <select
+              <select
+                 className="form-control"
               id="licensePlate"
               name="licensePlate"
               value={formValues.licensePlate}
@@ -174,7 +176,8 @@ const DevolucionAuto = () => {
       <div>
         <a href="/logout">Cerrar sesión</a>
       </div>
-    </div>
+      </div>
+      </>
   );
 };
 
