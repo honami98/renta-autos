@@ -17,7 +17,8 @@ const RentarAuto = () => {
     const fetchCars = async () => {
       try {
         const carsRef = db.collection("cars");
-        const snapshot = await carsRef.get();
+        const snapshot = await carsRef.where("disponible","==",true).get();
+        const existingUserQuerySnapshot = await db
         const carsData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -102,6 +103,7 @@ const RentarAuto = () => {
             >
               {carList.map((car) => (
                 <option key={car.id} value={car.id}>
+                  
                   {car.modelo}
                 </option>
               ))}
