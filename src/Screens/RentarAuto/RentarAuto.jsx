@@ -10,15 +10,13 @@ const RentarAuto = () => {
   const [rentForm, setFormData] = useState({
     startDate: new Date().toISOString().slice(0, 10),
     endDate: "",
-    rentalNumber: "",
   });
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
         const carsRef = db.collection("cars");
-        const snapshot = await carsRef.where("disponible","==",true).get();
-        const existingUserQuerySnapshot = await db
+        const snapshot = await carsRef.where("disponible", "==", true).get();
         const carsData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -51,11 +49,11 @@ const RentarAuto = () => {
       });
       return;
     }
+
     try {
-      const { startDate, endDate, rentalNumber } = rentForm;
+      const { startDate, endDate } = rentForm;
 
-
-      if (!startDate || !endDate || !rentalNumber) {
+      if (!startDate || !endDate) {
         Swal.fire({
           title: "Error",
           text: "Por favor, completa todos los campos",
@@ -63,35 +61,62 @@ const RentarAuto = () => {
         });
         return;
       }
-      await db.collection("rent").add(rentForm);
+
+      const rentNumber = await generateRentNumber(); // Generar número de renta auto incrementable
+
+      await db.collection("rent").add({
+        ...rentForm,
+        rentalNumber: rentNumber,
+      });
+
+      await updateCarAvailability(); // Actualizar disponibilidad del auto en la colección "cars"
+
       Swal.fire({
         title: "Éxito",
         text: "La renta se ha guardado correctamente",
         icon: "success",
       });
-      // Mostrar alerta de éxito
 
-      // Limpiar los campos del formulario
       setFormData({
         startDate: new Date().toISOString().slice(0, 10),
         endDate: "",
-        rentalNumber: "",
-      });    
-  } catch (error) {
-    console.log(error);
-    Swal.fire({
-      title: "Error",
-      text: "Ha ocurrido un error al guardar la renta",
-      icon: "error",
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        title: "Error",
+        text: "Ha ocurrido un error al guardar la renta",
+        icon: "error",
+      });
+    }
+  };
+
+  const generateRentNumber = async () => {
+    const rentRef = db.collection("rent");
+    const snapshot = await rentRef
+      .orderBy("rentalNumber", "desc")
+      .limit(1)
+      .get();
+    if (snapshot.empty) {
+      return 1;
+    } else {
+      const lastRent = snapshot.docs[0].data();
+      return lastRent.rentalNumber + 1;
+    }
+  };
+
+  const updateCarAvailability = async () => {
+    const carId = rentForm.carId;
+    await db.collection("cars").doc(carId).update({
+      disponible: false,
     });
-  }
-};
+  };
 
   return (
     <div>
       <Navbar />
       <div className="container">
-      <h2 className="text-center">Alquilar un auto</h2>
+        <h2 className="text-center">Alquilar un auto</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="carList">Autos disponibles:</label>
@@ -100,10 +125,11 @@ const RentarAuto = () => {
               className="form-control"
               name="carId"
               onChange={handleChange}
+              required
             >
+              <option value="">Seleccione un auto</option>
               {carList.map((car) => (
                 <option key={car.id} value={car.id}>
-                  
                   {car.modelo}
                 </option>
               ))}
@@ -118,6 +144,7 @@ const RentarAuto = () => {
               name="startDate"
               value={rentForm.startDate}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -129,18 +156,7 @@ const RentarAuto = () => {
               name="endDate"
               value={rentForm.endDate}
               onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="rentalNumber">Número de renta:</label>
-            <input
-              type="number"
-              id="rentalNumber"
-              className="form-control"
-              name="rentalNumber"
-              value={rentForm.rentalNumber}
-              
-              onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">

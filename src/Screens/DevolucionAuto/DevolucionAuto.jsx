@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
-import db from "../../Firestore"; // Importa la instancia de Firebase Firestore
+import db from "../../Firestore";
 import Navbar from "../../Components/Navbar/Navbar";
 
 const DevolucionAuto = () => {
-  const [licensePlateOptions, setLicensePlateOptions] = useState([]);
+  const [rentalNumberOptions, setRentalNumberOptions] = useState([]);
   const [formValues, setFormValues] = useState({
     licensePlate: "",
-    returnDate: "",
-    startDate: "",
-    rentNumber: "",
+    rentalNumber: "",
+    returnDate: new Date().toISOString().slice(0, 10),
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLicensePlates = async () => {
       try {
-        setLoading(true); // Activar el indicador de carga
+        setLoading(true);
+        const rentalNumber = await db.collection("rent");
+        const snapshot = await rentalNumber.get();
+        const rentalNumbers = snapshot.docs.map((doc) => doc.data().rentalNumber);
 
-        const snapshot = await db.collection("devolutions").get(); // Cambio de 'cars' a 'devolutions'
-        const licensePlates = snapshot.docs.map((doc) => doc.data().rentNumber);
-        setLicensePlateOptions(licensePlates);
+        setRentalNumberOptions(rentalNumbers);
 
-        setLoading(false); // Desactivar el indicador de carga
-        // Mostrar alerta de éxito
+        setLoading(false);
         Swal.fire({
           title: "Datos cargados",
           text: "Los datos se han cargado correctamente.",
@@ -33,7 +32,6 @@ const DevolucionAuto = () => {
         });
       } catch (error) {
         console.error("Error al obtener las placas de los vehículos:", error);
-        // Mostrar alerta de error
         Swal.fire({
           title: "Error",
           text: "Ha ocurrido un error al obtener los datos.",
@@ -42,7 +40,6 @@ const DevolucionAuto = () => {
         });
       }
     };
-
     fetchLicensePlates();
   }, []);
 
@@ -56,16 +53,11 @@ const DevolucionAuto = () => {
 
   const handleSaveReturn = async (event) => {
     event.preventDefault();
-
-    const { licensePlate, returnDate, startDate, rentNumber } = formValues;
-
-    if (
-      licensePlate === "" ||
-      returnDate === "" ||
-      startDate === "" ||
-      rentNumber === ""
-    ) {
-      // Mostrar alerta de campos vacíos
+  
+    const { licensePlate, returnDate, rentalNumber } = formValues;
+  
+    // Verificar campos vacíos
+    if (!licensePlate || !returnDate || !rentalNumber) {
       Swal.fire({
         title: "Campos vacíos",
         text: "Por favor, complete todos los campos.",
@@ -74,40 +66,55 @@ const DevolucionAuto = () => {
       });
       return;
     }
-
+  
     try {
-      // Guardar la devolución en la base de datos de Firebase
-      await db.collection("devolutions").add({
-        // Cambio de 'cars' a 'devoluciones'
-        rentalNumber: rentNumber, // Cambio de 'rentNumber' a 'rentalNumber'
-        licensePlate: licensePlate,
-        returnDate: returnDate,
-        startDate: startDate,
+      // Guardar la devolución en la colección "devolutions" de Firebase
+      const devolutionRef = await db.collection("devolutions").add({
+        rentalNumber,
+        returnDate,
+        licensePlate,
       });
-
-      // Actualizar el campo "disponible" del auto a false
-      await db.collection("cars").doc(licensePlate).update({
-        disponible: false,
-      });
-
-      // Mostrar alerta de éxito
-      Swal.fire({
-        title: "Devolución guardada",
-        text: "La devolución se ha guardado correctamente.",
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      });
-
-      // Restablecer los campos del formulario
-      setFormValues({
-        licensePlate: "",
-        returnDate: "",
-        startDate: "",
-        rentNumber: "",
-      });
+  
+      // Verificar si la devolución se guardó correctamente
+      if (!devolutionRef.id) {
+        throw new Error("Error al guardar la devolución.");
+      }
+  
+      // Buscar el auto en la colección "cars" por la placa
+      const carsRef = db.collection("cars");
+      const querySnapshot = await carsRef.where("placa", "==", licensePlate).get();
+  
+      // Verificar si se encontró el auto
+      if (!querySnapshot.empty) {
+        const carRef = querySnapshot.docs[0].ref;
+  
+        // Actualizar el campo "disponible" del auto a true
+        await carRef.update({
+          disponible: true,
+        });
+  
+        Swal.fire({
+          title: "Devolución guardada",
+          text: "La devolución se ha guardado correctamente.",
+          icon: "success",
+          confirmButtonText: "Aceptar",
+        });
+  
+        setFormValues({
+          rentalNumber: "",
+          licensePlate: "",
+          returnDate: "",
+        });
+      } else {
+        Swal.fire({
+          title: "Placa no encontrada",
+          text: "La placa ingresada no corresponde a ningún vehículo registrado.",
+          icon: "error",
+          confirmButtonText: "Aceptar",
+        });
+      }
     } catch (error) {
       console.error("Error al guardar la devolución:", error);
-      // Mostrar alerta de error
       Swal.fire({
         title: "Error",
         text: "Ha ocurrido un error al guardar la devolución.",
@@ -116,68 +123,69 @@ const DevolucionAuto = () => {
       });
     }
   };
+  
 
   return (
     <>
       <Navbar />
-    <div className="container">
-      <h2>Devolver un auto</h2>
-      {loading ? (
-        <p>Cargando...</p>
-      ) : (
-        <form className="form" onSubmit={handleSaveReturn}>
-          <div className="form-group">
-            <label htmlFor="licensePlate">Número de placa:</label>
+      <div className="container">
+        <h2>Devolver un auto</h2>
+        {loading ? (
+          <p>Cargando...</p>
+        ) : (
+          <form className="form" onSubmit={handleSaveReturn}>
+            <div className="form-group">
+              <label htmlFor="rentalNumber">Número de Renta:</label>
               <select
-                 className="form-control"
-              id="licensePlate"
-              name="licensePlate"
-              value={formValues.licensePlate}
-              onChange={handleChange}
-            >
-              <option value="">Seleccione una placa</option>
-              {licensePlateOptions.map((licensePlate) => (
-                <option key={licensePlate} value={licensePlate}>
-                  {licensePlate}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="returnDate">Fecha de devolución:</label>
-            <input
-              type="date"
-              id="returnDate"
-              name="returnDate"
-              value={formValues.returnDate}
-              onChange={handleChange}
-              className="form-control"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="startDate">Fecha inicial:</label>
-            <input
-              type="date"
-              id="startDate"
-              name="startDate"
-              value={formValues.startDate}
-              onChange={handleChange}
-              className="form-control"
-            />
-          </div>
-    
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary">
-              Guardar devolución
-            </button>
-          </div>
-        </form>
-      )}
-      <div>
-        <a href="/logout">Cerrar sesión</a>
+                className="form-control"
+                id="rentalNumber"
+                name="rentalNumber"
+                value={formValues.rentalNumber}
+                onChange={handleChange}
+              >
+                <option value="">Seleccione su número de Renta</option>
+                {rentalNumberOptions.map((rentalNumber) => (
+                  <option key={rentalNumber} value={rentalNumber}>
+                    {rentalNumber}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="licensePlate">Número de Placa</label>
+              <input
+                type="text"
+                id="licensePlate"
+                name="licensePlate"
+                value={formValues.licensePlate}
+                onChange={handleChange}
+                className="form-control"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="returnDate">Fecha de devolución:</label>
+              <input
+                type="date"
+                id="returnDate"
+                name="returnDate"
+                value={formValues.returnDate}
+                onChange={handleChange}
+                className="form-control"
+              />
+            </div>
+
+            <div className="form-group">
+              <button type="submit" className="btn btn-primary">
+                Guardar devolución
+              </button>
+            </div>
+          </form>
+        )}
+        <div>
+          <a href="/logout">Cerrar sesión</a>
+        </div>
       </div>
-      </div>
-      </>
+    </>
   );
 };
 
